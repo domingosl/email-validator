@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>0xAI</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <style>
+        body {
+            background: #212529;
+            color: #adb5bd;
+        }
+        footer {
+            background: rgb(43,48,53);
+        }
+        table {
+            color: #adb5bd !important;
+        }
+        a {
+            color: white;
+            font-weight: 500;
+            text-decoration: none;
+            border-bottom: 1px dashed;
+        }
+        .container p {
+            margin-bottom: 0;
+        }
+        .checkmark {
+            background-image: url("data:image/svg+xml,%3Csvg style='color: rgb(26, 228, 12);' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='30' zoomAndPan='magnify' viewBox='0 0 30 30.000001' height='30' preserveAspectRatio='xMidYMid meet' version='1.0'%3E%3Cdefs%3E%3CclipPath id='id1'%3E%3Cpath d='M 2.328125 4.222656 L 27.734375 4.222656 L 27.734375 24.542969 L 2.328125 24.542969 Z M 2.328125 4.222656 ' clip-rule='nonzero' fill='%231ae40c'%3E%3C/path%3E%3C/clipPath%3E%3C/defs%3E%3Cg clip-path='url(%23id1)'%3E%3Cpath fill='%231ae40c' d='M 27.5 7.53125 L 24.464844 4.542969 C 24.15625 4.238281 23.65625 4.238281 23.347656 4.542969 L 11.035156 16.667969 L 6.824219 12.523438 C 6.527344 12.230469 6 12.230469 5.703125 12.523438 L 2.640625 15.539062 C 2.332031 15.84375 2.332031 16.335938 2.640625 16.640625 L 10.445312 24.324219 C 10.59375 24.472656 10.796875 24.554688 11.007812 24.554688 C 11.214844 24.554688 11.417969 24.472656 11.566406 24.324219 L 27.5 8.632812 C 27.648438 8.488281 27.734375 8.289062 27.734375 8.082031 C 27.734375 7.875 27.648438 7.679688 27.5 7.53125 Z M 27.5 7.53125 ' fill-opacity='1' fill-rule='nonzero'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+        }
+        .fail {
+            background-image: url("data:image/svg+xml,%3Csvg style='color: red' xmlns='http://www.w3.org/2000/svg' width='30' height='30' fill='currentColor' class='bi bi-x' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z' fill='red'%3E%3C/path%3E%3C/svg%3E");
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+        }
+        .modal-body {
+            font-size: 15px;
+            line-height: 17px;
+            text-align: justify;
+            color: #666;
+        }
+    </style>
+
+</head>
+<body class="d-flex flex-column h-100">
+
+<main>
+    <div class="container">
+
+        <h1 class="mt-5">Email Validation Report</h1>
+        <p class="lead">0xAI</p>
+        <br />
+        <hr />
+        <p>Generated on: <strong><%=generationDatetime%></strong></p>
+        <p>Emails parsed: <strong><%=count%></strong></p>
+        <p>Valid: <strong><%=totalOK%></strong></p>
+        <p>Invalid: <strong><%=totalKO%></strong></p>
+
+        <hr />
+        <br />
+
+        <h4>RESULTS</h4>
+        <table class="table">
+
+            <thead>
+            <tr>
+                <th scope="col">Email</th>
+                <th scope="col">Valid format</th>
+                <th scope="col">Is Disposable</th>
+                <th scope="col">Valid MX</th>
+<!--                <th scope="col">Domain Age (days)</th>-->
+                <th scope="col">SMTP check</th>
+                <th scope="col">AI</th>
+                <th scope="col">Valid</th>
+            </tr>
+            </thead>
+            <tbody>
+                <% for(var i=0; i < data.length; i++) { %>
+                    <tr>
+                        <th scope="row"><%= data[i].email %></th>
+                        <td><%= data[i].validFormat ? 'YES' : 'NO' %></td>
+                        <td><%= data[i].isDisposable ? 'YES' : 'NO' %></td>
+                        <td><%= data[i].mxFound ? 'YES' : 'NO' %></td>
+<!--                        <td><%= data[i].domainAge %></td>-->
+                        <td><%= data[i].smtpCheck.status === true ? 'User found' : data[i].smtpCheck.status === null ? '' : 'User not found' %></td>
+                        <td>
+                            <% if (data[i].ai) { %>
+                                <a href="#" onclick="aiExplainer('<%= data[i].ai.username %>', '<%= data[i].ai.domain_name %>', '<%= data[i].ai.conclusion %>')"><%= data[i].ai.confidence %></a>
+                            <% } %>
+                        </td>
+                        <td>
+                            <% if(data[i].isValid) { %>
+                                <span class="checkmark"></span>
+                            <% } %>
+                            <% if(!data[i].isValid) { %>
+                                <span class="fail"></span>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+
+        </table>
+        <br />
+        <br />
+        <br />
+    </div>
+</main>
+
+<footer class="footer mt-auto py-3 bg-body-tertiary">
+    <div class="container">
+        <span class="text-body-secondary">Zero_AI by <a href="https://www.linkedin.com/in/domingolupo/" target="_blank">Eng. Domingo Lupo</a></span>
+    </div>
+</footer>
+
+<div id="modal" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">0xAI</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+
+<script>
+
+    const modal = new bootstrap.Modal('#modal');
+
+    const aiExplainer = (username, domain_name, conclusion) => {
+
+        document.getElementById('modal-body').innerHTML = '<strong>Username: </strong>' + atob(username)
+            + '<br /><br /><strong>Domain name: </strong>' + atob(domain_name) +
+            '<br /><hr /><strong>Conclusion: </strong>' + atob(conclusion);
+        modal.show();
+
+    };
+</script>
+
+</body>
+</html>
