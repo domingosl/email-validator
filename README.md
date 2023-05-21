@@ -1,5 +1,5 @@
 # 0xAI
-Get meaningful insights from your email addresses thanks to AI.
+Get meaningful validation insights from email addresses thanks to AI.
 
 With ❤ From Milan 🍕, By Eng. Domingo Lupo
 
@@ -32,5 +32,5 @@ You'll need a OpenAI api key.
 
 #### For more information:
 
-- Devpost page:
-- Video presentation:
+- Devpost page: https://devpost.com/software/zero_ai
+- Video presentation: https://youtu.be/SUFiF110KkE
