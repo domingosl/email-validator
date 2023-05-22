@@ -77,9 +77,11 @@ if(options.input && options.email)
 
         console.log("Generating report...");
 
-        const file = await report.generate(results, count, totalOk);
+        const fileHTML = await report.generateHTML(results, count, totalOk);
+        const fileCSV = await report.generateCSV(results, count, totalOk);
 
-        console.log("Report available at: ", file);
+        console.log("HTML Report available at: ", fileHTML);
+        console.log("CSV Report available at: ", fileCSV);
     });
 
 
